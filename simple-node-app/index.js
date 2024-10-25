@@ -4,7 +4,7 @@ const app = express();
 const PORT = 3000;
 
 app.get('/node', (req, res) => {
-    res.send('Dev env says hello, hello from simple-node-app!');
+    res.send('Dev updated - hello from simple-node-app!');
 });
 
 app.listen(PORT, () => {
