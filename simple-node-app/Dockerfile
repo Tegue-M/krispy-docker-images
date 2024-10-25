@@ -1,5 +1,5 @@
 # Use the Node.js 14 image
-FROM node:14
+FROM public.ecr.aws/docker/library/node:14
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
