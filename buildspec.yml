@@ -1,23 +1,27 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      - echo "Installing dependencies"
-      - npm install
   pre_build:
     commands:
-      - echo "Logging into Amazon ECR"
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 296274010522.dkr.ecr.eu-west-1.amazonaws.com
+      - REPOSITORY_URI=296274010522.dkr.ecr.eu-west-1.amazonaws.com/krispy-krew-dev-ecr
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
     commands:
-      - echo "Building Docker image"
-      - docker build -t simple-node-app .
-      - docker tag simple-node-app:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/krispy-krew-dev-ecr:simple-node-app
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
-      - echo "Pushing Docker image to ECR"
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/krispy-krew-dev-ecr:simple-node-app
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"krispy-krew-node","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
-  files:
-    - "**/*"
+    files: imagedefinitions.json
