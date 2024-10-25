@@ -4,9 +4,9 @@ const app = express();
 const PORT = 3000;
 
 app.get('/node', (req, res) => {
-    res.send('Hello from simple-node-app!');
+    res.send('Lekker lekker, Hello from simple-node-app!');
 });
 
 app.listen(PORT, () => {
-    console.log(`Lekker lekker, server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
