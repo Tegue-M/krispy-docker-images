@@ -5,8 +5,8 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
-      - aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 296274010522.dkr.ecr.eu-west-1.amazonaws.com
-      - REPOSITORY_URI=296274010522.dkr.ecr.eu-west-1.amazonaws.com/krispy-krew-dev-node-repo
+      - aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 264672683777.dkr.ecr.eu-west-1.amazonaws.com
+      - REPOSITORY_URI=264672683777.dkr.ecr.eu-west-1.amazonaws.com/krispy-krew-dev-repo
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
